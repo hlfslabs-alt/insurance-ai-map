@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>아침 종합 보고서 · 11/25(수)</title>
+<style>/*
+ * Hoin Design Tokens — 룩(look) 층
+ *
+ * 이 파일은 세 프로젝트가 **똑같이** 가져간다. 라운드·그림자·헤어라인·폰트,
+ * 그리고 "면이 몇 단계인가" 같은 구조가 여기 있다.
+ *
+ * 색의 실제 값은 여기 없다. 아래 --hoin-* 색 슬롯은 전부
+ *   var(--hoin-palette-XXX, 기본값)
+ * 형태라서, 팔레트 파일이 --hoin-palette-* 를 정의하면 그쪽이 이긴다.
+ * 팔레트를 안 넣으면 기본값(다크 보라)으로 돈다.
+ *
+ *   @import "tokens.css";   ← 룩 (공통, 이 저장소)
+ *   @import "palette.css";  ← 색 (그 앱 저장소가 소유한다)
+ *
+ * 두 파일의 import 순서는 상관없다 — fallback 방식이라 순서에 의존하지 않는다.
+ * 적용법은 design-system/README.md 참고.
+ */
+
+:root {
+  /* ── 면 (어두운 바닥 → 위로 올라올수록 밝은 다크 기준 4단계) ── */
+  --hoin-bg: var(--hoin-palette-bg, #09090b);               /* 페이지 바닥 */
+  --hoin-panel: var(--hoin-palette-panel, #131316);         /* 패널 · 레일 */
+  --hoin-surface: var(--hoin-palette-surface, #18181b);     /* 카드 */
+  --hoin-surface-2: var(--hoin-palette-surface-2, #1f1f23); /* 컨트롤 배경 */
+  --hoin-nested: var(--hoin-palette-nested, #111113);       /* 카드 안에 얹는 면 */
+
+  /* ── 선 ─────────────────────────────────────────────────── */
+  --hoin-border: var(--hoin-palette-border, #27272a);
+  --hoin-border-dim: var(--hoin-palette-border-dim, #3f3f46);
+  /* 면 위에 얹는 1px. 단색 border보다 면이 덜 갈라져 보인다.
+     밝은 배경 팔레트는 반드시 어두운 쪽으로 덮어쓸 것 — 흰색 알파는 안 보인다 */
+  --hoin-hairline: var(--hoin-palette-hairline, rgba(255, 255, 255, .055));
+
+  /* ── 글자 ───────────────────────────────────────────────── */
+  --hoin-text: var(--hoin-palette-text, #e4e4e7);
+  --hoin-text-dim: var(--hoin-palette-text-dim, #a1a1aa);
+  --hoin-text-muted: var(--hoin-palette-text-muted, #71717a);
+  --hoin-text-faint: var(--hoin-palette-text-faint, #52525b);
+
+  /* ── 강조 ───────────────────────────────────────────────── */
+  --hoin-accent: var(--hoin-palette-accent, #a78bfa);              /* 아이콘 · 테두리 */
+  --hoin-accent-text: var(--hoin-palette-accent-text, #c4b5fd);    /* 강조 글자 */
+  --hoin-accent-strong: var(--hoin-palette-accent-strong, #a855f7);/* 채운 버튼 */
+  --hoin-accent-deep: var(--hoin-palette-accent-deep, #7c3aed);    /* 그라데이션 끝 */
+  --hoin-accent-soft: var(--hoin-palette-accent-soft, rgba(167, 139, 250, .13));
+  --hoin-on-accent: var(--hoin-palette-on-accent, #ffffff);
+
+  /* ── 상태 (-soft = 배경용, on- = 그 색 위에 얹는 글자색) ──── */
+  --hoin-success: var(--hoin-palette-success, #4ade80);
+  --hoin-success-soft: var(--hoin-palette-success-soft, rgba(74, 222, 128, .12));
+  --hoin-on-success: var(--hoin-palette-on-success, #052e16);
+
+  --hoin-warning: var(--hoin-palette-warning, #f59e0b);
+  --hoin-warning-soft: var(--hoin-palette-warning-soft, rgba(245, 158, 11, .1));
+  --hoin-on-warning: var(--hoin-palette-on-warning, #1c1300);
+
+  --hoin-danger: var(--hoin-palette-danger, #ef4444);
+  --hoin-danger-soft: var(--hoin-palette-danger-soft, rgba(239, 68, 68, .1));
+  --hoin-on-danger: var(--hoin-palette-on-danger, #450a0a);
+
+  /* ── 여기서부터가 "룩". 팔레트가 바뀌어도 그대로 간다 ─────── */
+
+  /* 라운드 */
+  --hoin-radius-sm: 10px;   /* 칩 · 작은 버튼 */
+  --hoin-radius-md: 14px;   /* 카드 안의 항목 */
+  --hoin-radius-lg: 18px;   /* 카드 · 섹션 */
+  --hoin-radius-xl: 20px;   /* 패널 · 레일 같은 큰 면 */
+  --hoin-radius-pill: 100px;
+
+  /* 그림자 — 형태(번짐·거리)는 공통, 색조만 팔레트가 정한다 */
+  --hoin-shadow-tint: var(--hoin-palette-shadow-tint, rgba(0, 0, 0, .45));
+  --hoin-shadow-card: 0 10px 30px var(--hoin-shadow-tint);
+  --hoin-shadow-accent: 0 6px 18px color-mix(in oklab, var(--hoin-accent-deep) 40%, transparent);
+  --hoin-glow-accent: 0 0 16px color-mix(in oklab, var(--hoin-accent) 30%, transparent);
+
+  /* 강조 그라데이션 — 각도는 공통, 색은 팔레트를 탄다 */
+  --hoin-gradient-accent: linear-gradient(150deg, var(--hoin-accent-strong), var(--hoin-accent-deep));
+
+  /* 타이포 */
+  --hoin-font-sans: var(--hoin-palette-font-sans,
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', system-ui, sans-serif);
+  --hoin-font-mono: var(--hoin-palette-font-mono,
+    'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', monospace);
+}
+
+/*
+ * 간격 스케일은 일부러 없다 — Tailwind 앱엔 이미 있고, 바닐라 쪽은 4의 배수로 충분하다.
+ * 라이트 테마는 팔레트 파일로 만든다 (palettes/_template.css 참고).
+ */
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--hoin-bg); color: var(--hoin-text); font-family: var(--hoin-font-sans);
+  font-size: 15px; line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
+main { max-width: 760px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 14px; }
+header h1 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+header p { margin: 4px 0 0; color: var(--hoin-text-muted); font-size: 13px; }
+.card { background: var(--hoin-surface); border: 1px solid var(--hoin-border); border-radius: var(--hoin-radius-lg);
+  box-shadow: inset 0 1px 0 var(--hoin-hairline); padding: 16px 18px; }
+h2 { margin: 0 0 8px; font-size: 17px; }
+h3 { margin: 14px 0 6px; font-size: 14px; color: var(--hoin-accent-text); }
+ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+p { margin: 6px 0; }
+a { color: var(--hoin-accent-text); }
+strong { color: var(--hoin-text); }
+.dim, li .dim { color: var(--hoin-text-muted); }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.kpi { background: var(--hoin-nested); border-radius: var(--hoin-radius-md); padding: 10px; text-align: center; }
+.kpi b { display: block; font-size: 22px; }
+.kpi span { color: var(--hoin-text-muted); font-size: 12px; }
+.kpi .d { font-size: 12px; color: var(--hoin-accent-text); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--hoin-border); text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--hoin-text-muted); font-weight: 500; }
+.bar { display: grid; grid-template-columns: 88px 1fr 32px; gap: 8px; align-items: center; font-size: 14px; margin: 4px 0; }
+.bar i { display: block; height: 8px; border-radius: var(--hoin-radius-pill); background: var(--hoin-accent); }
+.bar b { text-align: right; font-weight: 500; }
+@media (max-width: 420px) { .kpi b { font-size: 18px; } }
+</style></head>
+<body><main>
+<header><h1>아침 종합 보고서 · 11/25(수)</h1><p>2026-11-25 07:50 KST 기준 · 지난 24시간 언론 보도 정리</p></header>
+<section class="card"><h2>🎯 오늘 볼 3가지</h2><ul><li><strong>PG·VAN 3사 개인정보 유출에 금융당국 긴급 점검</strong> — 웰컴페이먼츠·NHN KCP·KIS정보통신 유출 사고에 대한 금융당국 점검이 시작됐으며, 웰컴페이먼츠는 고객 1,326명 유출이 보도됐다. <a href="https://news.google.com/rss/articles/CBMic0FVX3lxTE1kUExTN2l5YWhlVHo0YU1Rbmx1MGF5dEJpaUd1RGFzcUhaTUtYU2lBMHQ3NTIxdU4xTHlKT2VrNVphR1RfZU5ESzVlNjhYbHMzdVhVRnpkdGs0N1NiNndCRzB5SFp5bVBBLWZmenEySGhQOUk?oc=5" target="_blank" rel="noopener">디지털투데이</a></li><li><strong>디지털자산기본법 정부안, 해킹·장애 무과실 배상 추진</strong> — 가상자산 거래소에 해킹·전산장애 피해 무과실 배상책임과 해킹 발생 시 최대 매출 10% 과징금을 부과하는 방안이 공개됐다. <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE1ndGpLeHl0bk1fZXdiYmQ4b1ZqamE0OGdSOEpnVWtwYTNIWDE3Vi1WSFRZQmhGUFRTRTdPdTg3NUpDZl9kVkp3QXJ1RmVjVmxFUDh4dGlR?oc=5" target="_blank" rel="noopener">중앙일보</a></li><li><strong>일본 게이오그룹 랜섬웨어, 개인정보 약 1,100만명분 유출 우려</strong> — 대형 랜섬웨어 피해로 실제 유출 여부와 대응 조치 세부 내용은 미확인이다. <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTFBiZ0ZkNng0OXlxcGdtNW5fRDBUVWlMSFNZOWpuYnNIZHhiemJTcHB0SHhXQ1RiV29mMmlySWJ4TUxwSVQzZm5scmxnTVFsTXhVeGZET3Fn?oc=5" target="_blank" rel="noopener">지디넷코리아</a></li></ul></section><section class="card"><h2>🛡️ 보안</h2><h3>금융</h3><ul><li>하나저축은행 고객 552명 개인정보 유출 — 해킹 피해로 고객 정보 유출이 보도됐으며, 침해 경위와 당국 조치 세부 내용은 추가 확인이 필요하다. <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE51dmJqUFZMSGNLNU1LVElCY2hiamctQ29XVFZVc2E4T05RYjY2dXRXWlU0NHN0UzV4TXk2Y2VqRFBZT1JsZ0lPX1ZKVnA5MzFNbUd6Z3NsRndibERyMHZ5aURn?oc=5" target="_blank" rel="noopener">뉴스1</a></li><li>미 법무부 바이낸스 해킹 자금 몰수: 북한 연계 해킹 자금으로 지목된 USDC 11억7,000만달러 규모 몰수 절차 착수 → 국내 보도 기준 약 1조5,000억원 규모로 언급. <a href="https://news.google.com/rss/articles/CBMidEFVX3lxTE9kcEpWTXh0dUlVc3I0ZkllRWQ1OXhLam9NeHpmeFp5TnFMZy00Z25DdndHYTFzY0NiRVYzTVFJb3U2WlBGd2RDcEhudVA4ZnNDczlOMnpEdFYtRjE1NzFobm9IWHpKcXVQRmNhSnNRMnNPQmpaeWfSAXtBVV95cUxOVVNiYzVCSDZzenBLaUxkUDNxbWQ0NzlfdGpHZk1GbF9YdVF1T2tpNjVaWmFiOENUazdjU0FfeEN6eVlkbDBHRXltVlludnJCRWM5MUFLV016VVBTOEJaMjFNclhQZ0hSQndRNm1ybE5EU2t2OUp0R2k0c3c?oc=5" target="_blank" rel="noopener">머니투데이</a></li><li>삼성증권 해킹 여파 전자투표 중단 — 개인정보 유출 사고 후 HMM 주주총회 등 상장사 전자투표가 중단된 것으로 보도됐으며, 정상화 일정은 미확인이다. <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE03SE1wVFVoY2tSMVcwcGg2Y1RPaHgtYUktY1dTMGx2MEtmc2YwMEhlLVoxU3ZtZWRNS1FTbXlVQnZ4R1BXRWc3WE5ZRnR5bkhLRGkwRTl5ckdJcWZzMk1zNEdjOUI1czlnSWhj?oc=5" target="_blank" rel="noopener">한국신용신문</a></li><li>줌펀드 해킹: 피해액 3억3,000만원 전액 복구 → 12월 초 홈페이지 재개 추진, 침해 원인과 추가 피해 여부는 미확인. <a href="https://news.google.com/rss/articles/CBMiWkFVX3lxTE1kU1RtdmtuOXpoWXN6UHBFNHJ4NlFsNlpib0pBWE0zUjZLbnllSlV4VUhDeGpSM0psWUh1NTVqUF9uNEpTMjRXaklLZk1vWG9MaFRhV2NfQVdOUdIBWEFVX3lxTE9YLWxFS0U2S0h3Tk9qeUdjMk9SejVNQ3ZTUmhSazlpZXg5NmM0Rmw2QS1sNU54YWhsdENoRTFhUkFHTlExWFpYSDk3b0dlbnVpUGZOcHRQaC0?oc=5" target="_blank" rel="noopener">아주경제</a></li><li>금융위의 금융보안원 감사 예고 — ‘해킹 공격’ 관련 감사가 다음 주 착수될 것으로 보도됐으며, 사고 범위와 피해 규모는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiZEFVX3lxTE5DcWMxRmZway03Qkx2cnM2NGJaR3VMeGJONUZQVnZpWU1tbUhuNG92NENwNXRGTUNFczVIUWxReGY3UTBRcU1MYVE5NWVzZlUzMnVIZDduanhjVDd1dDFPVEY1Y3g?oc=5" target="_blank" rel="noopener">라디오코리아</a></li><li>가상자산 해킹 의심 거래 입출금 차단 검토 — 금융당국이 사업자의 입출금을 최대 12시간 차단할 수 있도록 하는 방안을 검토 중이다. <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBkYUJ2eHdENFF1R3g1dzRVQXBRdmZDNWhuSms5aVItVmt0MnlhdHNjVEVNNXNJOUhMekItZ3dfTzlTV1dmS3VlWlRxaGd2UFlCYUtub1AzZDJ5RmJhM2ZDcXg0WVU3U00?oc=5" target="_blank" rel="noopener">금감원 관련 보도</a></li><li>전자금융거래법 개정안 처리 연기 — 해킹 금융사에 매출 3% 과징금을 부과하는 개정안 처리가 다음 달로 미뤄졌다. <a href="https://news.google.com/rss/articles/CBMiYkFVX3lxTE1LS0NSMThBQXZ5QnlQekx6ZjlMdkpNTk5nc2YtZFJTYWZWazZQVEVrRGgtX3pfWjh4MWxjY1lBdVhLNlY5UUdQTWpia1dGeEltZnE4TXh3MVJyNVFLZGxWQ1FR?oc=5" target="_blank" rel="noopener">뉴스1</a></li><li>미국 은행권 AI 대응 — AI 비서 해킹·오작동에 대비한 비상 중단 장치 도입과 AI 사용·근무 시간 제한 검토가 보도됐다. <a href="https://news.google.com/rss/articles/CBMic0FVX3lxTE03RE9KYmo4bUotT2tFMlNqbWRGc1g0dFpwZXptVjJfcFlqMUhVdnJldEV2SXF1VkEza01SUE8xeU5vQXBxaXQ5Z3pOVlUwNDcyb080SlBBQjJUSkdabzk5SFJUa0p2VlVzQmdXRmxVYUNCakHSAWZBVV95cUxQa3MwYms3MVlKcUllUEdjU1hydUk4WEtTYklUZVVFeG56djdKWjZaWF9DSi1vTTd3VTBaZVo3RS0zMlZmOGQxMnBEcUx2V0dyNnBlY2NMdTdmTUZ3QklsZURwcS1qVEE?oc=5" target="_blank" rel="noopener">동아일보</a></li></ul><h3>개인정보</h3><ul><li>한전 개인정보 유출: 유출 대상자 152만명 통지 완료 → 개인정보위 현장점검 착수, 해커와 협상한 사실은 없다고 밝혔다. <a href="https://news.google.com/rss/articles/CBMiVEFVX3lxTFBqYWhpNGdqZ3FEVXhpdXFQSmZzaHgyS3FpTjFfS1lRNUN6QXBZUjgwY0RjU00zVURvZ0dIUWNIOHFMTUUwclRUbGlubUI0bjh0V1hRMA?oc=5" target="_blank" rel="noopener">뉴스1</a></li><li>벨레다 일본 쇼핑몰 고객정보 유출 우려 — 해킹으로 고객정보 19만8,792건이 유출됐을 가능성이 제기됐으며, 유출 항목과 후속 조치는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE5DMGJRUm82TkFXWGhJdF9xSWdGWTRrSVdLTzhJR1FCcWllSXRWZlFZSHlYQnF2dnNWcGtWVUJMZElFVFFXM2l6a0dvaXBhMFFmRXkydV9R?oc=5" target="_blank" rel="noopener">지디넷코리아</a></li><li>HD현대로보틱스 홈페이지 가입자 정보 유출 — 홈페이지 해킹으로 기업명·부서·직책 등 최대 10개 항목이 유출됐으며, 정확한 규모와 경위는 파악 중이다. <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE42WXd3eFRWRnd3VTZndnYtZUFZaGtTM1JnY2tQU2N2dkg4amlvLTZYWDhkNlVROU5NWER4ZmJlM3JILThPTURKRlBrcHpWLUMydmlRcWpzdmllMWJFbWxhNWFxZHp6ZFZxaXlPdg?oc=5" target="_blank" rel="noopener">데일리시큐</a></li><li>라리가 팬 플랫폼 해킹 — 여러 구단 팬의 개인정보 유출이 보도됐으며, 유출 규모와 대응 조치는 미확인이다. <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE83TzJ4dFNuXzlLanRGbF9PTl9Hb0lweU5DQW9CUHFZZHp1WlQ0UWxoNExyMDhVM05oVTFud28yOUhOM3Qwc0VObTZmaDl2aWlNbjR3NFFpUHBmSlFvMkpUMGVjSUFmc1R4OTBacw?oc=5" target="_blank" rel="noopener">데일리시큐</a></li><li>KT 개인정보위 과징금 불복소송 — KT가 과징금 처분 불복소송을 확정하고 법률대리인을 선임한 것으로 보도됐다. <a href="https://news.google.com/rss/articles/CBMiTkFVX3lxTE4tb1hPVlBIeFA0MWxRM0lrbjB2bml4dkZPQmlkWHk4R1hjZGxHaWNfbGNlNm9PWThDQWxqZTZEOGQ0cjhfNGhWb3VHRmpDQQ?oc=5" target="_blank" rel="noopener">전자신문</a></li><li>개인정보위 사칭 유출 통지 악성메일 — 개인정보 유출 통지를 위장해 악성 첨부파일 실행을 유도하는 메일이 확인됐다. <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE1XWDE5aUZ6VWQ2dHRYQW5aNmJ4MV9waDFLQV8zRTRNVFNPbHBpeXVnbkVnYk5pR0U5Q2pHRGVxQmpJVXl0SFU1NVlEZGtpZWdkdl9nSlNHdWJnMTFzLVJXTdIBYEFVX3lxTE1XWDE5aUZ6VWQ2dHRYQW5aNmJ4MV9waDFLQV8zRTRNVFNPbHBpeXVnbkVnYk5pR0U5Q2pHRGVxQmpJVXl0SFU1NVlEZGtpZWdkdl9nSlNHdWJnMTFzLVJXTQ?oc=5" target="_blank" rel="noopener">연합뉴스</a></li><li>국립순천대 구 향림통 시스템 개인정보 유출 정황 — 유출 항목·피해 규모·후속 조치는 미확인이다. <a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE9RcmcyU2RTMUp2ci1lWmJnMExkdnVYV3YtY3dKNU13a2dTTWJEcDFPNjJVbjUwRENad2RQUkNTTlNOc1dKblJnNkRlU21rOEtlYmh5eU9XSk4xUTMyMjBfSlI3UGJGMWRMcEMwMA?oc=5" target="_blank" rel="noopener">데일리시큐</a></li></ul><h3>IT 보안</h3><ul><li>CIA·국가정보국 해킹 피해 — 일부 비기밀 정보 노출이 보도됐고 기밀 정보 유출은 없었던 것으로 전해졌으며, 침입 경로와 피해 범위는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBLbmhDVmRMclRUampOSkZZN29HeUU4T3dLdlR2RDRVdlc4N2JMLWFLcUFKejlkdzF6cldqZmotZmhMSU1YM015c19yUzR2YmJMYkx3SWhEMjVmSlXSAWBBVV95cUxPLVBteDdvRHVfLUZfeVFDcER5ZTNRLXlfSGFxSjN6YXNYZnN2NFpZOVRZSHZSZzZDNWFqYnFVeURUMWRlcDkzZ1VKMFRyeFRVa0tpUFJxQl9jSy1lc0JmWFY?oc=5" target="_blank" rel="noopener">연합뉴스</a></li><li>우버 개인정보 약 15만건 탈취 보도 — 해킹으로 개인정보 약 15만건이 탈취됐다고 보도됐으며, 유출 항목과 후속 조치는 미확인이다. <a href="https://news.google.com/rss/articles/CBMicEFVX3lxTFBqdmM4azlkN0FFV21hRnBZTW1ZR1MzZWpTN2I2UjFvYXpxUlJWT1pxdm5qbG5JMWo5RjUwYmY4SW9XSjFsc0ZPZWQ0bzJMS09TYS1EOXRFNFkyNGZiRjVGa3ZjbHNtWlRiNWJMVjBMWHI?oc=5" target="_blank" rel="noopener">비즈트리뷴</a></li><li>중국 연계 해킹 조직의 기업 서버 관리자 권한 탈취 정황 — 대상 기업, 악용 취약점, 피해 규모는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiZ0FVX3lxTE5WNXhqSkY4Z1k0M05QSTR5dUZfMEh6elhhWkpBTUNCcjFndEZjVTNRbTNDMUpmdXZleWRIN1NhdGF4Z040TWRKeGlpMEFwcVNPdFJiMFNYS1J3SkJoNVpzLVRXSDlVWEU?oc=5" target="_blank" rel="noopener">뉴스1</a></li><li>rERP 해킹 관련 산학연 시스템 피해 확산 우려 — 대학을 약한 고리로 한 산학연 연계 시스템의 피해 가능성이 제기됐으며, 피해 규모와 공격 기법은 미확인이다. <a href="https://www.boannews.com/news/articleView.html?idxno=147469" target="_blank" rel="noopener">보안뉴스</a></li><li>MS 클라우드 관리자 권한 탈취 취약점 — 노르웨이 피해 사례와 함께 보도됐으며, CVE 번호·영향 제품 범위·패치 여부는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE9mWkpHQ05OXzAwb19tRl9xWHY0WUJsbXEwU3VKWVV5anhMWWd3bUN0bW9JQ3NNWjB1Z2hDNlVjVV9aS3NoWkM0VjZ1UmZvbElJekc1Rm5DMWxhY2VzUDRhZFY3azcydw?oc=5" target="_blank" rel="noopener">디일렉</a></li><li>Cisco Expressway 취약점 — 패치 이후에도 악용 사례가 보도됐으며, 취약점 식별정보와 피해 범위는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiZkFVX3lxTE9aV2VkbldJRFVMZXRwY084ZkpZdS14dDVTaU5UQU1zZEtncU5CeThUaDBPQkwtajhNYjIzRXB3U2pxQjBmRndvU3IzXzBPWGZVakFIT2Z2Mm5kNkloaW03MExQWlA3dw?oc=5" target="_blank" rel="noopener">디일렉</a></li><li>nginx 웹 서버 취약점 — 티오리가 취약점 발견 사실과 즉시 패치 필요성을 알렸으며, CVE 번호·영향 범위·심각도는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiXkFVX3lxTFBzMzRwd3Frc2w2THZuTG5qckE4TlRselNHcUdzNmFiYkdfUnFydk1JLVdFVU05WFJXOVkyNTJReGxDOWwzaWVFSnRZVm45Tl9oVFRTOUNqenFkRVFZeXfSAWNBVV95cUxOYWVRNjVqdEc0UkowLV9Wc0E4OTZPV1p0am1KRU9yTC03VzdsOXJMQVdqQUlKT1AxQm56NGtZRGt1R21QOG5LLTRtanNGTlZ6RFlSUXJ0aEhtY211TmN0UVRTdFk?oc=5" target="_blank" rel="noopener">스포츠경향</a></li><li>AI 프로그램 위장 악성코드 — 국내 백신 프로그램 작동을 방해하는 사례가 발견됐다고 보도됐다. <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE9WajJZSDZ4bWFNdGdPdWJscWZBMUJJR1N4aElWaVdKX0ZOR2w1RDZRXzJkR2lUT0Y1SW5wWHpLZkVUUHNMaFJWVG9LVlFFellfM3BaRjVBMVpMOVpjd3NaZNIBYEFVX3lxTE9WajJZSDZ4bWFNdGdPdWJscWZBMUJJR1N4aElWaVdKX0ZOR2w1RDZRXzJkR2lUT0Y1SW5wWHpLZkVUUHNMaFJWVG9LVlFFellfM3BaRjVBMVpMOVpjd3NaZA?oc=5" target="_blank" rel="noopener">연합뉴스</a></li><li>KISA 보호나라 패치 권고 — Splunk·ConnectWise·BeyondTrust. <a href="https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&amp;bbsId=B0000133&amp;searchWrd=&amp;menuNo=205020&amp;pageIndex=1&amp;categoryCode=&amp;nttId=72326" target="_blank" rel="noopener">Splunk 권고</a></li><li>국내 기업 대상 랜섬웨어 공격 증가 — 1년 새 2배로 늘었고 제조업이 주요 표적으로 지목됐다. <a href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE5QRVI4UXJ0TWJWRWxyU2dNRG1EYzJhc2ZJZTRSRUlNYWExc3czUUM4ZGZFNHdDLTdMQkhoRHVmaXExYzNQVEFqOFk1UF96WnNVM250clZlcU5lbGU4U216V9IBeEFVX3lxTE8ySlpXbEJUZEV1eV84M19kdUtwbzgzLXJQTmJmWDBFMUc4X3RfeENPZVU5d3NlZERJSXQ5NEF5T2lMelltRFNyVUZBWlB5SE9ZcEVBWkJmU251cEdRdWl3aDZ4MUR6WWg2Tk5mX3dhcHBmalc2NmR6VA?oc=5" target="_blank" rel="noopener">뉴시스</a></li><li>포티넷 랜섬웨어 동향 — 한국을 노린 랜섬웨어 조직 수가 1년 새 11개에서 24개로 늘었다고 밝혔다. <a href="https://news.google.com/rss/articles/CBMiS0FVX3lxTFB4TFBrTmxrckRZQ2VkWVRZb2FTTnJEWkw3WGJPOXF2RGRfZ3hLUDZNSzE2cTBtMnBVSTdCV2FjN3FzRzdGQy1sZXFfRQ?oc=5" target="_blank" rel="noopener">재경일보</a></li></ul></section><section class="card"><h2>🤖 보험 AI</h2><ul><li>[보험사] <strong>교보라이프플래닛생명</strong> — 외부 유출을 막는 사내 AI를 업무 전반에 적용한 것으로 보도됐으며, 구체적 적용 업무와 운영 범위는 미확인이다. <a href="https://news.google.com/rss/articles/CBMickFVX3lxTE10YTdIUTNfdUQxOW9DNlZHVWxLcGZDVTRzaUVxRU1KMllSZ3R2T3pyaVJmWDhaRWtsQ3UwVDltMlplRUZldGc3UHZyX25DdkpDRmpTV19TS01EVWZfNE1mSzZ1aS0tbkRxUjl5ZnN6TE1oQQ?oc=5" target="_blank" rel="noopener">중앙이코노미뉴스</a></li><li>[해외] <strong>미국 보험업계</strong> — 보험사의 AI 활용 심사에 대한 규제·감독 움직임이 보도됐으며, 적용 보험사·대상 업무와 제도 단계는 미확인이다. <a href="https://news.google.com/rss/articles/CBMiSkFVX3lxTE1qX0hDd2hUWmRRb3JGeTlKS0tMbjF5M2F2eERwTXRCV0VWcXVrQXRsdDkydS1PTFdFNVEwMWlzWm9RUmFycXV4MXRn?oc=5" target="_blank" rel="noopener">코인리더스</a></li><li>[보험사] <strong>손해보험업계</strong> — 보험사기 대응과 보험금 누수 방지를 위한 AI 활용 동향이 보도됐으며, 개별 보험사와 적용 단계는 미확인이다. <a href="https://news.google.com/rss/articles/CBMia0FVX3lxTE51ZExIRzhSVllpX0JrYnNQcnFMREthSG5XRUlHWkpQZllnOHNib2lWcXdkVTRtZ0dLaktqeFU5b1lJaFpldXZEaUtaR0hHa3NsdVVSVm5KdjRDQTlmSnVOOTFKLUowb1ZTZVJn?oc=5" target="_blank" rel="noopener">시사오늘</a></li><li>[해외] <strong>Applied Systems</strong> — AI 기반 보험 문서 자동화 기업 Tailwind를 인수했으며, 인수 후 서비스 적용 범위는 미확인이다. <a href="https://news.google.com/rss/articles/CBMimwFBVV95cUxNY2lsaldpcktwVUxpLXlXWXVhcWs2NnhPbWNnbkJ4enVPM2toSlY3Sms0ZmhaTW95VjFXa1RDVEZUVUdXTjk3WGxWTUxzRnYtbzJ3WmtCb0lfbWtTaFc4bGUzZmpqRkdxU1o1QUdiVFlydDZUYmR0QW9KRlE3aGdLVHBSUGpnbFJYM3Jka1ZIVjRVcmJkZkQxb3VnUQ?oc=5" target="_blank" rel="noopener">Unite.AI</a></li></ul></section>
+<section class="card"><h2>📊 보험 AI 서비스 맵 현황</h2>
+<div class="kpis"><div class="kpi"><b>191</b><span>전체</span></div><div class="kpi"><b>143 <span class="d">▲2</span></b><span>운영</span></div><div class="kpi"><b>7</b><span>시범</span></div><div class="kpi"><b>41</b><span>계획</span></div></div>
+<h3>전날 대비</h3><ul><li>[신규] 교보라이프플래닛생명 · LUA AI 운영</li><li>[신규] DB손해보험 · DB T-System 운영</li></ul><p class="dim">검증에서 보류된 기사 8건 (원문 대조·AI 재검증 미통과)</p>
+<h3>업권 × 상태</h3><table><tr><th></th><th>운영</th><th>시범</th><th>계획</th></tr><tr><td>생명보험</td><td>53</td><td>3</td><td>10</td></tr><tr><td>손해보험</td><td>41</td><td>2</td><td>9</td></tr><tr><td>GA</td><td>17</td><td>1</td><td>11</td></tr><tr><td>테크핀</td><td>25</td><td>1</td><td>10</td></tr><tr><td>외국계</td><td>7</td><td>·</td><td>1</td></tr></table>
+<h3>누가 쓰나</h3><div class="bar"><span>고객</span><i style="width:100%"></i><b>58</b></div><div class="bar"><span>설계사</span><i style="width:93%"></i><b>54</b></div><div class="bar"><span>임직원</span><i style="width:67%"></i><b>39</b></div><div class="bar"><span>상담원</span><i style="width:21%"></i><b>12</b></div><div class="bar"><span>설계사(FC)</span><i style="width:5%"></i><b>3</b></div>
+<h3>최근 출시·발표</h3><ul><li><span class="dim">2026.11</span> 엑셀금융서비스 · JARVIA(한국FP센터) AI 영업지원 플랫폼</li><li><span class="dim">2026.11</span> 삼성생명 · 시니어 커넥티드 케어</li><li><span class="dim">2026.11</span> 조윈 · 건강설계사 플랫폼</li><li><span class="dim">2026.10</span> KGA에셋 · DB 품질 검수·내부통제 AI</li><li><span class="dim">2026.10</span> 교보생명 · 평생든든서비스 AI 건강리포트</li></ul>
+<p><a href="../" target="_blank" rel="noopener">전체 서비스 맵 보기 →</a></p></section>
+</main></body></html>
