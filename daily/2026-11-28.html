@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>아침 종합 보고서 · 11/28(토)</title>
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>/*
+ * Hoin Design Tokens — 룩(look) 층
+ *
+ * 이 파일은 세 프로젝트가 **똑같이** 가져간다. 라운드·그림자·헤어라인·폰트,
+ * 그리고 "면이 몇 단계인가" 같은 구조가 여기 있다.
+ *
+ * 색의 실제 값은 여기 없다. 아래 --hoin-* 색 슬롯은 전부
+ *   var(--hoin-palette-XXX, 기본값)
+ * 형태라서, 팔레트 파일이 --hoin-palette-* 를 정의하면 그쪽이 이긴다.
+ * 팔레트를 안 넣으면 기본값(다크 보라)으로 돈다.
+ *
+ *   @import "tokens.css";   ← 룩 (공통, 이 저장소)
+ *   @import "palette.css";  ← 색 (그 앱 저장소가 소유한다)
+ *
+ * 두 파일의 import 순서는 상관없다 — fallback 방식이라 순서에 의존하지 않는다.
+ * 적용법은 design-system/README.md 참고.
+ */
+
+:root {
+  /* ── 면 (어두운 바닥 → 위로 올라올수록 밝은 다크 기준 4단계) ── */
+  --hoin-bg: var(--hoin-palette-bg, #09090b);               /* 페이지 바닥 */
+  --hoin-panel: var(--hoin-palette-panel, #131316);         /* 패널 · 레일 */
+  --hoin-surface: var(--hoin-palette-surface, #18181b);     /* 카드 */
+  --hoin-surface-2: var(--hoin-palette-surface-2, #1f1f23); /* 컨트롤 배경 */
+  --hoin-nested: var(--hoin-palette-nested, #111113);       /* 카드 안에 얹는 면 */
+
+  /* ── 선 ─────────────────────────────────────────────────── */
+  --hoin-border: var(--hoin-palette-border, #27272a);
+  --hoin-border-dim: var(--hoin-palette-border-dim, #3f3f46);
+  /* 면 위에 얹는 1px. 단색 border보다 면이 덜 갈라져 보인다.
+     밝은 배경 팔레트는 반드시 어두운 쪽으로 덮어쓸 것 — 흰색 알파는 안 보인다 */
+  --hoin-hairline: var(--hoin-palette-hairline, rgba(255, 255, 255, .055));
+
+  /* ── 글자 ───────────────────────────────────────────────── */
+  --hoin-text: var(--hoin-palette-text, #e4e4e7);
+  --hoin-text-dim: var(--hoin-palette-text-dim, #a1a1aa);
+  --hoin-text-muted: var(--hoin-palette-text-muted, #71717a);
+  --hoin-text-faint: var(--hoin-palette-text-faint, #52525b);
+
+  /* ── 강조 ───────────────────────────────────────────────── */
+  --hoin-accent: var(--hoin-palette-accent, #a78bfa);              /* 아이콘 · 테두리 */
+  --hoin-accent-text: var(--hoin-palette-accent-text, #c4b5fd);    /* 강조 글자 */
+  --hoin-accent-strong: var(--hoin-palette-accent-strong, #a855f7);/* 채운 버튼 */
+  --hoin-accent-deep: var(--hoin-palette-accent-deep, #7c3aed);    /* 그라데이션 끝 */
+  --hoin-accent-soft: var(--hoin-palette-accent-soft, rgba(167, 139, 250, .13));
+  --hoin-on-accent: var(--hoin-palette-on-accent, #ffffff);
+
+  /* ── 상태 (-soft = 배경용, on- = 그 색 위에 얹는 글자색) ──── */
+  --hoin-success: var(--hoin-palette-success, #4ade80);
+  --hoin-success-soft: var(--hoin-palette-success-soft, rgba(74, 222, 128, .12));
+  --hoin-on-success: var(--hoin-palette-on-success, #052e16);
+
+  --hoin-warning: var(--hoin-palette-warning, #f59e0b);
+  --hoin-warning-soft: var(--hoin-palette-warning-soft, rgba(245, 158, 11, .1));
+  --hoin-on-warning: var(--hoin-palette-on-warning, #1c1300);
+
+  --hoin-danger: var(--hoin-palette-danger, #ef4444);
+  --hoin-danger-soft: var(--hoin-palette-danger-soft, rgba(239, 68, 68, .1));
+  --hoin-on-danger: var(--hoin-palette-on-danger, #450a0a);
+
+  /* ── 여기서부터가 "룩". 팔레트가 바뀌어도 그대로 간다 ─────── */
+
+  /* 라운드 */
+  --hoin-radius-sm: 10px;   /* 칩 · 작은 버튼 */
+  --hoin-radius-md: 14px;   /* 카드 안의 항목 */
+  --hoin-radius-lg: 18px;   /* 카드 · 섹션 */
+  --hoin-radius-xl: 20px;   /* 패널 · 레일 같은 큰 면 */
+  --hoin-radius-pill: 100px;
+
+  /* 그림자 — 형태(번짐·거리)는 공통, 색조만 팔레트가 정한다 */
+  --hoin-shadow-tint: var(--hoin-palette-shadow-tint, rgba(0, 0, 0, .45));
+  --hoin-shadow-card: 0 10px 30px var(--hoin-shadow-tint);
+  --hoin-shadow-accent: 0 6px 18px color-mix(in oklab, var(--hoin-accent-deep) 40%, transparent);
+  --hoin-glow-accent: 0 0 16px color-mix(in oklab, var(--hoin-accent) 30%, transparent);
+
+  /* 강조 그라데이션 — 각도는 공통, 색은 팔레트를 탄다 */
+  --hoin-gradient-accent: linear-gradient(150deg, var(--hoin-accent-strong), var(--hoin-accent-deep));
+
+  /* 타이포 */
+  --hoin-font-sans: var(--hoin-palette-font-sans,
+    'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', system-ui, sans-serif);
+  --hoin-font-mono: var(--hoin-palette-font-mono,
+    'JetBrains Mono', ui-monospace, SFMono-Regular, 'SF Mono', monospace);
+}
+
+/*
+ * 간격 스케일은 일부러 없다 — Tailwind 앱엔 이미 있고, 바닐라 쪽은 4의 배수로 충분하다.
+ * 라이트 테마는 팔레트 파일로 만든다 (palettes/_template.css 참고).
+ */
+
+/* 폰(기본) → 700px 태블릿(카드 3열·기사 모두 펼침) → 900px 기사 3열 → 1100px 데스크톱(머리 한 줄·보험 AI 카드:맵 = 2:1) */
+:root { --hoin-palette-bg: #eceef2; --hoin-palette-surface: #ffffff; --hoin-palette-text: #16191f; --hoin-palette-text-dim: #4f5662;
+  --hoin-palette-hairline: rgba(0, 0, 0, .06); --hoin-palette-shadow-tint: rgba(20, 25, 35, .08);
+  --s-red: #d9473e; --s-ochre: #e7a521; --s-blue: #1d3b63; --s-teal: #13897c; --s-ink: #16191f; --s-grey: #9aa1ab;
+  --s-on: #ffffff; --s-pilot: #f3c24a; --s-plan: #0c5c53; --s-track: rgba(255, 255, 255, .18);
+  --gut: 16px; color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--hoin-bg); color: var(--hoin-text); font-family: "Noto Sans KR", var(--hoin-font-sans);
+  font-size: 15px; line-height: 1.5; word-break: keep-all; overflow-wrap: anywhere; }
+main { max-width: 1200px; margin: 0 auto; padding: 22px var(--gut) 40px; display: grid; gap: 22px; }
+main > *, section { min-width: 0; }  /* 가로 넘김 줄이 페이지 폭을 밀어내지 않게 */
+a { color: inherit; text-decoration: none; }
+a:focus-visible, summary:focus-visible, button:focus-visible { outline: 2px solid var(--s-blue); outline-offset: 2px; }
+h5 { margin: 0 0 10px; font-size: 17px; font-weight: 900; }
+
+/* 머리 */
+.top { display: grid; gap: 12px; }
+.hello small { color: var(--hoin-text-dim); font-weight: 500; font-size: 13px; }
+.hello h1 { margin: 0; font-family: "Black Han Sans", "Noto Sans KR", sans-serif; font-weight: 400; font-size: clamp(30px, 4vw, 44px); line-height: 1.15; }
+.rings { display: flex; gap: 14px; padding: 8px 6px 6px; margin: 0 calc(-1 * var(--gut)); padding-left: var(--gut); overflow-x: auto; }
+.ring { display: grid; justify-items: center; gap: 4px; font-size: 12px; color: var(--hoin-text-dim); font-weight: 500; flex: none; }
+.ring b { width: 60px; height: 60px; border-radius: 50%; display: grid; place-items: center; font-family: "Black Han Sans", sans-serif;
+  font-weight: 400; font-size: 23px; color: var(--hoin-text); background: var(--hoin-surface); box-shadow: 0 0 0 3px var(--hoin-bg), 0 0 0 5.5px var(--rc); }
+.ring.blue { --rc: var(--s-blue); } .ring.red { --rc: var(--s-red); } .ring.ochre { --rc: var(--s-ochre); } .ring.teal { --rc: var(--s-teal); }
+
+/* 핵심 3장 · 진행 사건: 폰에선 옆으로 넘김 */
+.tops, .flows { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut) 6px; scroll-padding-left: var(--gut); }
+.tops::-webkit-scrollbar, .flows::-webkit-scrollbar { display: none; }
+.tops > *, .flows > * { scroll-snap-align: start; flex: none; }
+.big { width: min(300px, 80vw); min-height: 300px; border-radius: var(--hoin-radius-xl); padding: 18px; color: #fff; display: flex; flex-direction: column; gap: 8px; }
+.big .k { font-size: 12px; font-weight: 700; letter-spacing: .04em; opacity: .9; }
+.big .num { font-family: "Black Han Sans", sans-serif; font-size: 62px; line-height: 1; margin-top: auto; letter-spacing: -.02em; }
+.big .num small { font-size: 24px; }
+.big .num-gap { margin-top: auto; }
+.big .t { font-weight: 700; font-size: 17px; line-height: 1.35; }
+.big .s { font-size: 12.5px; opacity: .88; }
+.big.red { background: var(--s-red); } .big.ochre { background: var(--s-ochre); color: #1d1606; } .big.blue { background: var(--s-blue); }
+.flow { width: 236px; background: var(--hoin-surface); border-radius: var(--hoin-radius-lg); padding: 14px; display: grid; gap: 8px; align-content: start; }
+.flow b { font-size: 14.5px; }
+.flow ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; counter-reset: s; }
+.flow li { display: grid; grid-template-columns: 20px 1fr; gap: 6px; font-size: 13px; color: var(--hoin-text-dim); align-items: start; }
+.flow li::before { counter-increment: s; content: counter(s); width: 20px; height: 20px; border-radius: 50%; background: var(--hoin-bg);
+  display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--hoin-text); }
+.flow li:last-child::before { background: var(--s-ink); color: #fff; }
+.flow li a { text-decoration: underline; text-decoration-color: var(--s-grey); text-underline-offset: 3px; }
+.flow li a:hover { color: var(--hoin-text); }
+.flow li small { font-size: 11.5px; color: var(--s-teal); font-weight: 700; }
+
+/* 기사 */
+.news { display: grid; gap: 22px; align-items: start; }
+/* 보험 AI: 폰에선 카드 옆으로 넘김 + 맵 카드 아래 */
+.ins-row { display: grid; gap: 12px; }
+.ins-cards { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut) 4px; scroll-padding-left: var(--gut); }
+.ins-cards::-webkit-scrollbar { display: none; }
+.ins-card { flex: none; scroll-snap-align: start; width: min(250px, 72vw); min-height: 168px; background: var(--hoin-surface); border-radius: var(--hoin-radius-lg);
+  padding: 14px; display: flex; flex-direction: column; gap: 6px; border-top: 5px solid var(--s-teal); }
+.ins-card .tag { align-self: flex-start; font-size: 11.5px; font-weight: 700; color: #fff; background: var(--s-teal); border-radius: var(--hoin-radius-pill); padding: 2px 9px; }
+.ins-card b { font-size: 15.5px; line-height: 1.4; }
+.ins-card small { color: var(--hoin-text-dim); font-size: 13px; }
+.ins-card .out { margin-top: auto; font-size: 12px; color: var(--s-teal); font-weight: 700; }
+a.ins-card:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.none { margin: 0; color: var(--hoin-text-dim); }
+.feed { display: grid; gap: 8px; }
+.fi { background: var(--hoin-surface); border-radius: var(--hoin-radius-md); padding: 12px 14px; display: grid; grid-template-columns: 6px 1fr; gap: 0 12px; min-height: 44px; }
+.fi::before { content: ""; border-radius: 3px; background: var(--fc); }
+a.fi:hover b { text-decoration: underline; text-underline-offset: 3px; }
+.fi b { display: block; font-size: 15px; line-height: 1.4; }
+.fi small { color: var(--hoin-text-dim); font-size: 12.5px; }
+.fi.red { --fc: var(--s-red); } .fi.ochre { --fc: var(--s-ochre); } .fi.blue { --fc: var(--s-blue); }
+.fi.ink { --fc: var(--s-ink); } .fi.grey { --fc: var(--s-grey); } .fi.teal { --fc: var(--s-teal); }
+/* 폰: 개인정보·IT 보안은 버튼 뒤로. 스크립트가 없으면 그냥 다 보인다 */
+.js .more-sec { display: none; }
+.js.show-more .more-sec { display: block; }
+.more-btn { display: none; }
+.js .more-btn { display: flex; }
+.all { width: 100%; align-items: center; justify-content: center; background: var(--s-ink); color: #fff; font: inherit; font-weight: 700; border: 0;
+  border-radius: var(--hoin-radius-pill); min-height: 48px; cursor: pointer; }
+
+/* 맵 카드 */
+.ai { background: var(--s-teal); color: #fff; border-radius: var(--hoin-radius-xl); padding: 16px; display: grid; grid-template-columns: 112px 1fr; gap: 14px; align-items: center; }
+.ai > span { display: grid; gap: 4px; }
+.ai .h { font-size: 17px; font-weight: 900; }
+.ai .p { font-size: 13px; opacity: .95; }
+.ai .dim { opacity: .8; font-size: 12px; }
+.ai .lg { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12.5px; }
+.ai .lg i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+.ai .lg .on { background: var(--s-on); } .ai .lg .pi { background: var(--s-pilot); } .ai .lg .pl { background: var(--s-plan); }
+.ai circle { fill: none; }  /* SVG 원 기본 채움(검정)을 끈다 */
+.dn { fill: #fff; font-family: "Black Han Sans", sans-serif; font-size: 26px; }
+.dl { fill: #fff; font-size: 10.5px; opacity: .85; }
+
+/* JSON이 깨진 날의 글 형식 */
+.card { background: var(--hoin-surface); border-radius: var(--hoin-radius-lg); padding: 16px 18px; }
+.card h2 { margin: 0 0 8px; font-size: 17px; } .card h3 { margin: 14px 0 6px; font-size: 14px; }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; } .card a { text-decoration: underline; }
+.foot { text-align: center; font-size: 12px; color: var(--hoin-text-dim); margin: 0; }
+
+/* 태블릿 */
+@media (min-width: 700px) {
+  :root { --gut: 28px; }
+  main { gap: 28px; padding-top: 32px; }
+  .tops { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  .big { width: auto; min-height: 250px; }
+  .big .num { font-size: clamp(44px, 5.4vw, 64px); }
+  .flows { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  .flow { width: auto; }
+  .js .more-sec { display: block; }  /* 태블릿부터는 공간이 있어 버튼 없이 다 펼친다 */
+  .more-row { display: none; }
+  .ins-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; margin: 0; padding: 0; }
+  .ins-card { width: auto; }
+}
+@media (min-width: 900px) { .news { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+/* 데스크톱: 머리 한 줄, 기사 3열 모두 펼침 */
+@media (min-width: 1100px) {
+  .top { grid-template-columns: 1fr auto; align-items: end; }
+  .rings { margin: 0; padding: 8px 6px 6px; overflow: visible; }
+  .ring b { width: 72px; height: 72px; font-size: 28px; }
+  .ring { font-size: 13px; }
+  .ins-row { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: stretch; }
+  .ins .ai { grid-template-columns: 1fr; justify-items: center; text-align: center; align-content: center; }
+  .ins .ai .lg { justify-content: center; }
+}
+@media (prefers-reduced-motion: no-preference) { .tops, .flows { scroll-behavior: smooth; } }
+</style></head>
+<body><main>
+
+<header class="top"><div class="hello"><small>11월 28일 토요일 아침</small><h1>밤사이 21건,<br>꼭 볼 건 3개</h1></div>
+<div class="rings"><div class="ring blue"><b>5</b>금융</div><div class="ring red"><b>6</b>개인정보</div><div class="ring ochre"><b>5</b>IT 보안</div><div class="ring teal"><b>5</b>보험 AI</div></div></header>
+<div class="tops" aria-label="오늘 볼 3가지"><a class="big red" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBxcHVEUDJEVW1xVEJCTExOMzlfdTJwVXFiRFdnTGtGZWd1eGFVX25YZk10bFpUWGNtYVNrTC1fdDgzMWdFVFIzekQ2S2NSY0lELUwtZVJQWFB4VHfSAWBBVV95cUxNMVpWWDlQNnNaMUhWYmtNSGdKVkt6dGxBMmtzbjR4LTFvYXZyV0FYNzJfcExURnl3OWtBZVhyS2VleklOS2I1b3lkTnVWYjFEalY0bXpiMlNFMlVRSVJOUjk?oc=5" target="_blank" rel="noopener"><span class="k">유출 · 금감원 현장점검</span><span class="num">25<small>억원</small></span><span class="t">이나인페이 해킹 자금 유출</span><span class="s">금감원 현장점검 착수 · 연합뉴스</span></a><a class="big blue" href="https://news.google.com/rss/articles/CBMidkFVX3lxTFBIcWcxTmlKSVpLamJwd2FacVBQVG5tVEZxU2NGZ21lamY0aGhCcjBjSXNwQU5DMTF0ckJmYmJOdThUdmUzeE90YlUtQ2FqMEc3WWRwOVNKWjR3VjRyemV4RldhU0tLY3FLenpvNzcwR3RwUk9sMFHSAXtBVV95cUxPWVhxcWlYSER4Y1FXNE5NQ2IyQnVMRHYzUVJ1d3VEYXNXZlUzZDNCUUo1cG1nMmppM1FDZ2owM2hGdXNIUlk3QXZicnI4Uzl3M3ZZVUdGU1BDUlJvREJYbGhWZjk4LXg2eUJtdC1aMHN2eUI5czktdUZpQms?oc=5" target="_blank" rel="noopener"><span class="k">유출 · 피해 규모 확대</span><span class="num">1만2,168<small>명</small></span><span class="t">삼성증권 개인정보 유출 확대</span><span class="s">추가 3,927명 확인 · 머니투데이</span></a><a class="big red" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE50YTZodnh4NVVaMi12aGNPY3VsSnJ0d0xsU1EydFlYckRmYkJraHA3OXRkbVV2Ny1DNFRwcGVSX1lrNUR3VDc0SkZnUFZTUU9zMjRTdkZQV0NoNnPSAWBBVV95cUxPWVF2X2lNZzAyR0JUUHdTc0pDQlRTMlMtc1dZUWVEU2V3bmFDRHUxQm5oTC03N1ZoODE3azFQZ2lLdThFNXptRE5JeEtOMFFfSE9jbnd1Zmg3NE1XRkhRWVQ?oc=5" target="_blank" rel="noopener"><span class="k">유출 · 대형 고객정보</span><span class="num">11만3,855<small>명</small></span><span class="t">인터넷우체국 고객정보 유출</span><span class="s">등기우편 하루치 분석 기준 · 연합뉴스</span></a></div>
+<section class="ins"><h5>보험 AI 소식 5건</h5><div class="ins-row">
+<div class="ins-cards"><a class="ins-card" href="https://news.google.com/rss/articles/CBMidEFVX3lxTE5mSVgzeWNpZXlaWmxUbDRERjc4Vmo0UUlycFVobzNKTFdTV1RMNFFGSzBTdnJfbUJnVEtGSkZrYVhGcTFERngyWmJtNWNQeVlMLVJJMDZWcUI3YVF1ZGJ5ZzktX09UM1U0WUt2c0hDdTBiVWlJ?oc=5" target="_blank" rel="noopener"><span class="tag">보험사</span><b>삼성화재 설계사 지원 AI 어드바이저 공개</b><small>구체 적용 업무·운영 범위 미확인</small><span class="out">파이낸셜포스트</span></a><a class="ins-card" href="https://news.google.com/rss/articles/CBMiaEFVX3lxTFAwd3d1dURXazBKWmptZ2wzSjVkZDZOMVNtbF9ZZFJuQnFKd1R0dkVXUnUzRDRmUDNwLUxVaUVMNTVCQlFBSHRXcGNzdW92U3htV0xvUFc1aG1yQXR0WmtZWWRsQllwUFJK0gFsQVVfeXFMUDNFR2laeGczUi1ERXhoS090NWZkZ2Fnd3VFV0ZfZUtURUp3ckc1U001TUdnVnppVXZGR0lzS01WeklVN2ExdHA2cnZJd0JuZklfLVFsbkNyRUVpTG5uNlFBRU41bS0zTDFTWU1M?oc=5" target="_blank" rel="noopener"><span class="tag">보험사</span><b>신한라이프 설계사 AI 비서 리코 확대</b><small>설계사 10명 중 7명 사용</small><span class="out">블로터</span></a><a class="ins-card" href="https://www.insnews.co.kr/news/articleView.html?idxno=94105" target="_blank" rel="noopener"><span class="tag">제도</span><b>보험연수원 AI 학습플랫폼 LXP 운영</b><small>12월부터 보험 직무교육 적용</small><span class="out">보험뉴스</span></a><a class="ins-card" href="https://news.google.com/rss/articles/CBMiSEFVX3lxTFBhYXVSY0dWbnNqOWRqLW4wZ1JHYnNrVXpYTDAzMzg0R2RKWGRValpodE1KWEFEa1JSdXhzRzR5RnJXX3RLNkVybA?oc=5" target="_blank" rel="noopener"><span class="tag">핀테크</span><b>KT 보험청구 앱 스타트업 협력</b><small>AI·보험청구 분야 성과 공유</small><span class="out">플래텀</span></a><a class="ins-card" href="https://news.google.com/rss/articles/CBMic0FVX3lxTE5KdVFaMzFhQlcxQmJCMlhHLXgtSWdLeDYzQlFmb1B3VHB0MGFiUmctM0NCbUpHMWsteW1wcnJTNV9KOHhEcHRZX1loS09lQmkzekJ3dkhFM2tkRVJJNzZGRGZOTEstSURrak5Yc19HZmNCVFU?oc=5" target="_blank" rel="noopener"><span class="tag">해외</span><b>보험사 AI 도입의 규제·비용 과제</b><small>레거시 시스템 관리 문제 분석</small><span class="out">Unite.AI</span></a></div>
+<a class="ai" href="../" target="_blank" rel="noopener"><svg viewBox="0 0 112 112" width="112" height="112" role="img" aria-label="운영 145, 시범 7, 계획 43"><circle cx="56" cy="56" r="44" stroke="var(--s-track)" stroke-width="14"/><circle cx="56" cy="56" r="44" stroke="var(--s-on)" stroke-width="14" stroke-dasharray="205.6 276.46" stroke-dashoffset="-0.0" transform="rotate(-90 56 56)"/><circle cx="56" cy="56" r="44" stroke="var(--s-pilot)" stroke-width="14" stroke-dasharray="9.9 276.46" stroke-dashoffset="-205.6" transform="rotate(-90 56 56)"/><circle cx="56" cy="56" r="44" stroke="var(--s-plan)" stroke-width="14" stroke-dasharray="61.0 276.46" stroke-dashoffset="-215.5" transform="rotate(-90 56 56)"/><text x="56" y="58" text-anchor="middle" class="dn">195</text><text x="56" y="74" text-anchor="middle" class="dl">AI 서비스</text></svg>
+<span><b class="h">맵 +1</b><span class="p">새로 올라옴: DB손해보험 외제차 부품 검증 시스템</span>
+<span class="lg"><span><i class="on"></i>운영 145</span><span><i class="pi"></i>시범 7</span><span><i class="pl"></i>계획 43</span></span>
+<span class="p dim">검증 보류 8건 · 전체 맵 보기 ›</span></span></a>
+</div></section>
+<section class="block"><h5>계속 지켜보는 사건</h5><div class="flows"><div class="flow"><b>이나인페이 해킹</b><ol><li><a href="https://news.google.com/rss/articles/CBMiTkFVX3lxTFBEdXZTVmg0WnJlV3dSSVpnRHFiWlBjenhLWHUxajJ2dThGMHFZY0M2ZlFPRWdZZ18tbkdiY29OZ0ZLelVvVGpVeWxJTEtJUQ?oc=5" target="_blank" rel="noopener">25억원 탈취 보도 <small>전자신문</small></a></li><li><a href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE9CZHh1VWtHelVkR2F0SGVUNGZYc2trMno3cFFjZGV2TzNLVnllVHhOVDB0cVpha1R2LVhCd24xQzV5MTdUZ25VNnB6WmJhUV9WWllkVnd6aDgxS0F4?oc=5" target="_blank" rel="noopener">금감원 조사 착수 <small>뉴스핌</small></a></li><li><a href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBxcHVEUDJEVW1xVEJCTExOMzlfdTJwVXFiRFdnTGtGZWd1eGFVX25YZk10bFpUWGNtYVNrTC1fdDgzMWdFVFIzekQ2S2NSY0lELUwtZVJQWFB4VHfSAWBBVV95cUxNMVpWWDlQNnNaMUhWYmtNSGdKVkt6dGxBMmtzbjR4LTFvYXZyV0FYNzJfcExURnl3OWtBZVhyS2VleklOS2I1b3lkTnVWYjFEalY0bXpiMlNFMlVRSVJOUjk?oc=5" target="_blank" rel="noopener">현장점검 착수 <small>연합뉴스</small></a></li></ol></div><div class="flow"><b>삼성증권 개인정보 유출</b><ol><li><a href="https://news.google.com/rss/articles/CBMidkFVX3lxTFBIcWcxTmlKSVpLamJwd2FacVBQVG5tVEZxU2NGZ21lamY0aGhCcjBjSXNwQU5DMTF0ckJmYmJOdThUdmUzeE90YlUtQ2FqMEc3WWRwOVNKWjR3VjRyemV4RldhU0tLY3FLenpvNzcwR3RwUk9sMFHSAXtBVV95cUxPWVhxcWlYSER4Y1FXNE5NQ2IyQnVMRHYzUVJ1d3VEYXNXZlUzZDNCUUo1cG1nMmppM1FDZ2owM2hGdXNIUlk3QXZicnI4Uzl3M3ZZVUdGU1BDUlJvREJYbGhWZjk4LXg2eUJtdC1aMHN2eUI5czktdUZpQms?oc=5" target="_blank" rel="noopener">유출 규모 확대 확인 <small>머니투데이</small></a></li><li><a href="https://news.google.com/rss/articles/CBMiS0FVX3lxTE45anNhT0FsTDA2YXlFUTBxa2dIWjlFcmx2R3FUeUxlUktldG9IemNxRzdSaFpIVnYyVWpoLTlrdVNXbDZUbU0ycllyMA?oc=5" target="_blank" rel="noopener">피해 1만2,168명 <small>아이뉴스24</small></a></li></ol></div><div class="flow"><b>바이낸스 해킹</b><ol><li><a href="https://news.google.com/rss/articles/CBMigAFBVV95cUxOckZsdkJPaUF2bThnNUNDdFpJZXlvMjZYTTVOZ2dnaVdFS1d1OEJ3ZUpZQlZUbkp1RTVRSUVOcXowOWVab01RVG15VjdGMXNPWm1vekxCQy12RDdSN0h0cTNKcjdHSkdkWnNvMTdMSmI3RndjWmYxS25rUnk3bExMMg?oc=5" target="_blank" rel="noopener">출금 전면 재개 <small>이데일리</small></a></li><li><a href="https://news.google.com/rss/articles/CBMid0FVX3lxTE5RX28yZnEyb3g0M1dfVXdjSzc2c0gyR2ZCRHB0UmJEaGxYeTNwTUdiZzg2U0FVLWxLN3dfaW01UGNoa0JyVlJ4OXJLOE1tQW9RUmJ4TnNRMkEzemQ2WDlZU3prMmtSZ3RUOUhLbTZSbXlLdVlOUWxV0gFmQVVfeXFMUFpQQndEYzRvejRVaG56QW8zRGZOWFplQjdXRlVVSnBtVTdibEhJNzFfU3hQZUhrV1Qyb2JqeDgteWRuc2NvbDRXZnZ2VjNfTDVVR25RSVNZRnREalVSVWJWa2hKeXFn?oc=5" target="_blank" rel="noopener">자금 세탁 정황 보도 <small>동아일보</small></a></li><li><a href="https://news.google.com/rss/articles/CBMikgFBVV95cUxNMjhGMF9GXzh6MTNBQjNtZlBYNDhjdDhqM1ZQSzRuQ1h1RURYVUs4MzkxTFA4ZmFyeENoX3l5M3JsYVU5MW5xeUtsUEJ1bGZtaXl6TUZyTU9ySXgzaU5TRDRESThST0QxQVRab09DbHRhY1pJaGlfeUVYa2NiSHRjSGhrVk5QRmFkQjdZS2oyb01Md9IBkgFBVV95cUxNMjhGMF9GXzh6MTNBQjNtZlBYNDhjdDhqM1ZQSzRuQ1h1RURYVUs4MzkxTFA4ZmFyeENoX3l5M3JsYVU5MW5xeUtsUEJ1bGZtaXl6TUZyTU9ySXgzaU5TRDRESThST0QxQVRab09DbHRhY1pJaGlfeUVYa2NiSHRjSGhrVk5QRmFkQjdZS2oyb01Mdw?oc=5" target="_blank" rel="noopener">법원 보전 명령 <small>VOA 한국어</small></a></li></ol></div><div class="flow"><b>신한은행베트남 장애</b><ol><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1mTmRkQkJzdnI0ZUZVRmxBY1VISEpYSjBXSXhLcFB3dkg4NFlncW9vbHpsczd4dUltUHU5NXdaMmY3TXNENWVOUGV2Q3BDM2ZxWS0zams0S3JOU3VJbjRFTnNza091NU1PVk5FbQ?oc=5" target="_blank" rel="noopener">온라인뱅킹 일시 중단 <small>인사이드비나</small></a></li><li><a href="https://news.google.com/rss/articles/CBMibEFVX3lxTE1IZW84V3czdEt0bHB4cEQ3Q0g1SlZuajVJX3hQa3Q2X05TMXZPMnlvcGROVVVIZDNlTzBIRE82WDNtcDd5X3hPLVIxUWhFWEhoejdvMG03eGx3Rk5JVGYtWFJPYXVKZXp5dTc3Ug?oc=5" target="_blank" rel="noopener">주말 특별영업 돌입 <small>인사이드비나</small></a></li></ol></div></div></section>
+<div class="news"><section class="news-col"><h5>금융 소식 5건</h5><div class="feed"><a class="fi red" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTFBxcHVEUDJEVW1xVEJCTExOMzlfdTJwVXFiRFdnTGtGZWd1eGFVX25YZk10bFpUWGNtYVNrTC1fdDgzMWdFVFIzekQ2S2NSY0lELUwtZVJQWFB4VHfSAWBBVV95cUxNMVpWWDlQNnNaMUhWYmtNSGdKVkt6dGxBMmtzbjR4LTFvYXZyV0FYNzJfcExURnl3OWtBZVhyS2VleklOS2I1b3lkTnVWYjFEalY0bXpiMlNFMlVRSVJOUjk?oc=5" target="_blank" rel="noopener"><span><b>이나인페이 해킹 자금 유출</b><small>금감원 현장점검 착수 · 연합뉴스</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiWkFVX3lxTFBiZm5vUE0weFpqTFc2c0dXVUlyQVBsT2NsaTJTUjhNY2FzbkZrM1Z2Y2RXVDg2S2tVU1JyYVhFUGdtOHk0aTdxZXNGakpRSDV6blBwV0FObTdDdw?oc=5" target="_blank" rel="noopener"><span><b>전북은행 비대면 가입 서버 침해</b><small>고객·직원 467명 정보 유출 · 파이낸셜뉴스</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiZEFVX3lxTFBRalBRZ3kxRjVEa1JycGJVNUwyRno5bDcyZFl3R1ZHUXJBUTdsdUt2MEwzTmRCVE5UNmI5MVkyY0J3aHM5V1k2NnZMa0xDYkI1NFBmNGZoUmZ2MzVya3gwTmc4ZlA?oc=5" target="_blank" rel="noopener"><span><b>Sh수협은행 고객정보 유출</b><small>해킹으로 고객 54명 피해 · 서울경제TV</small></span></a><a class="fi ochre" href="https://news.google.com/rss/articles/CBMiXEFVX3lxTE42QnVQaTI2TG1MNFVEMFNUMVk5WEVzb18wdXNqY1o5Yk0tazBiY1pBQ3F3RlAzMmwyX2o5VEhyOXhycS1nN0lDOG9Td3ZFa290bHoweXR3bVJoTnRF?oc=5" target="_blank" rel="noopener"><span><b>금융위·금감원 제재 사전협의 명문화</b><small>중요 제재 해석 조율 강화 · 뉴스핌</small></span></a><a class="fi blue" href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE83ZHlzWldsX2w4NDdXSDBPb3MyVWRQQ1Z4NDI0RHhMNThVdTBkTVBPLWtGREVaXzJtZmFwMk80RXI1VHVRUFJJWDhoZ1QxVVVDTDF6VjhDMmVFQ0pCeEt5Q9IBYEFVX3lxTE83ZHlzWldsX2w4NDdXSDBPb3MyVWRQQ1Z4NDI0RHhMNThVdTBkTVBPLWtGREVaXzJtZmFwMk80RXI1VHVRUFJJWDhoZ1QxVVVDTDF6VjhDMmVFQ0pCeEt5Qw?oc=5" target="_blank" rel="noopener"><span><b>올스테이트 전산 장애 닷새째</b><small>장애 원인·피해 여부 미확인 · 연합뉴스</small></span></a></div></section><section class="news-col more-sec"><h5>개인정보 6건</h5><div class="feed"><a class="fi blue" href="https://news.google.com/rss/articles/CBMidkFVX3lxTFBIcWcxTmlKSVpLamJwd2FacVBQVG5tVEZxU2NGZ21lamY0aGhCcjBjSXNwQU5DMTF0ckJmYmJOdThUdmUzeE90YlUtQ2FqMEc3WWRwOVNKWjR3VjRyemV4RldhU0tLY3FLenpvNzcwR3RwUk9sMFHSAXtBVV95cUxPWVhxcWlYSER4Y1FXNE5NQ2IyQnVMRHYzUVJ1d3VEYXNXZlUzZDNCUUo1cG1nMmppM1FDZ2owM2hGdXNIUlk3QXZicnI4Uzl3M3ZZVUdGU1BDUlJvREJYbGhWZjk4LXg2eUJtdC1aMHN2eUI5czktdUZpQms?oc=5" target="_blank" rel="noopener"><span><b>삼성증권 개인정보 유출 확대</b><small>추가 3,927명 확인 · 머니투데이</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE50YTZodnh4NVVaMi12aGNPY3VsSnJ0d0xsU1EydFlYckRmYkJraHA3OXRkbVV2Ny1DNFRwcGVSX1lrNUR3VDc0SkZnUFZTUU9zMjRTdkZQV0NoNnPSAWBBVV95cUxPWVF2X2lNZzAyR0JUUHdTc0pDQlRTMlMtc1dZUWVEU2V3bmFDRHUxQm5oTC03N1ZoODE3azFQZ2lLdThFNXptRE5JeEtOMFFfSE9jbnd1Zmg3NE1XRkhRWVQ?oc=5" target="_blank" rel="noopener"><span><b>인터넷우체국 고객정보 유출</b><small>등기우편 하루치 분석 기준 · 연합뉴스</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiW0FVX3lxTE85c1phbFBSOTZ4dmZpclp4NUROT1ZCRU1CdFJTeHdnYkh2QnNLUmIzeDhqTUhUb1ZjN3VNUVdVdjVYX0tDZ1RKXzBuVXVUWXFObE9NMDNQSF80NW_SAWBBVV95cUxOXzFITjRDRUdEWk5IQ2h5enJ2YUllUTEzX3JfNXlDVGlOem9LUUZ4Y3NrX1ZKeUdhTTJEZVNEdUNKY0hxSXpPSHhGWnpVOWVLUFJuQU1MV3d6dzA3c0xlZDQ?oc=5" target="_blank" rel="noopener"><span><b>과학기술인공제회 회원정보 유출</b><small>회원 개인정보 약 21만건 · 연합뉴스</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiVEFVX3lxTE5iTk5FakhqaXBpY1otUENiX1F6cENGVGtiNHFuRjdfV19QRjdEN1ZtNnlXMkFaUjlibmFudW9keWFnU09XTVRoNGthU2d2cGNqbE9iVg?oc=5" target="_blank" rel="noopener"><span><b>CJ올리브영 업무시스템 해킹</b><small>임직원·고객 790명 정보 유출 · JTBC</small></span></a><a class="fi blue" href="https://news.google.com/rss/articles/CBMiVkFVX3lxTE93dzRKVUNwSXFKSmdFNGpMNlFzLXdZWmFCcFMtdUthQUg2NGdOU3RrdzF5V3l1S0Q1QUoxYTl0NzBtQ19NUkd3ZXg2R3NhRTNMNjhZUnpR?oc=5" target="_blank" rel="noopener"><span><b>다나와 회원정보 일부 유출 확인</b><small>유출 항목·인원 미확인 · 지디넷코리아</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMibEFVX3lxTE92YlYzNkNhQloxLTlKMHByRjNpMW43TUJZdjh4T2wyeHJwM3g3X055eGZ4WG1CT19tak5PVENXeFEzbXQ2TTZrZWJpa0R0UmFlWS1IaDlKOXhNakhrQWVFaGl1b0VaRXpwUUJGMg?oc=5" target="_blank" rel="noopener"><span><b>에어프레미아 위탁업체 해킹</b><small>고객정보·통화녹음 유출 가능성 · 데일리시큐</small></span></a></div></section><section class="news-col more-sec"><h5>IT 보안 5건</h5><div class="feed"><a class="fi ink" href="https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&amp;bbsId=B0000133&amp;searchWrd=&amp;menuNo=205020&amp;pageIndex=1&amp;categoryCode=&amp;nttId=72332" target="_blank" rel="noopener"><span><b>Palo Alto Networks·Synology 패치 권고</b><small>KISA 보호나라 보안 업데이트 · 보호나라</small></span></a><a class="fi ink" href="https://news.google.com/rss/articles/CBMiakFVX3lxTFBmMG04SUpLLXlkS0NpNU4tSGlPeW5PZWJxVWFYeGprcGt1YUNGOF9TbWlDNUpuaHZwU0dVRWdMT2ZzQ3o1N25LNElRMl9yUFhuVHpLcTVqSTY1Z0lJZmhvSHZOOFZicFMxcnc?oc=5" target="_blank" rel="noopener"><span><b>주니퍼 세션 스마트 결함 악용</b><small>CISA 알려진 악용 목록 등재 · 하이테크정보</small></span></a><a class="fi blue" href="https://www.etnews.com/20261127000347" target="_blank" rel="noopener"><span><b>SAP 깃허브 개발망 해킹 의심</b><small>침해 범위·유출 여부 미확인 · 전자신문</small></span></a><a class="fi ink" href="https://www.boannews.com/news/articleView.html?idxno=147590" target="_blank" rel="noopener"><span><b>CISA 미텔 MiCollab 등 10건 경고</b><small>실제 악용 정황 확인 · 보안뉴스</small></span></a><a class="fi red" href="https://news.google.com/rss/articles/CBMiYEFVX3lxTE41VW9SU0I1VmxHUTRLQ3ZJekdoMDlkeDY4UHAyOWYtVHFlWW0xZ3ZrQk5FTHZUYXprcVZJRnROcUFlYW8wQjhvMTBMSTl6VGZjTVMxcS1PYXZZNjE5TkhUWNIBYEFVX3lxTE41VW9SU0I1VmxHUTRLQ3ZJekdoMDlkeDY4UHAyOWYtVHFlWW0xZ3ZrQk5FTHZUYXprcVZJRnROcUFlYW8wQjhvMTBMSTl6VGZjTVMxcS1PYXZZNjE5TkhUWA?oc=5" target="_blank" rel="noopener"><span><b>미 공군 클라우드 원 해킹</b><small>민감 정보 유출 가능성 제기 · 연합뉴스</small></span></a></div></section></div>
+<div class="more-row"><button type="button" class="all more-btn" aria-expanded="false" onclick="var o=document.documentElement.classList.toggle('show-more');this.setAttribute('aria-expanded',o);this.textContent=o?'접기':'개인정보 · IT 보안 11건 더 보기'">개인정보 · IT 보안 11건 더 보기</button></div>
+
+<p class="foot">언론 보도를 자동으로 정리했습니다 · 아침 종합 보고서 · 11/28(토)</p>
+</main></body></html>
